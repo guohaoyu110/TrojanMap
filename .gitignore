@@ -5,6 +5,5 @@
 /bazel-testlogs
 /bazel-template
 /bazel-*
-/opencv
 .DS_Store
 .vscode
