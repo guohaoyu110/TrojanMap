@@ -21,6 +21,8 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
 
+// #define pi 3.1415926
+// #define EARTH_RADIUS 6378.137 //KM
 //-----------------------------------------------------
 // TODO (Students): You do not and should not change the following functions:
 //-----------------------------------------------------
@@ -116,7 +118,8 @@ void TrojanMap::PrintMenu() {
     if (results.size() != 0) {
       for (auto x : results) std::cout << x << std::endl;
       PlotPath(results);
-    } else {
+    } 
+    else {
       std::cout << "No route from the start point to the destination."
                 << std::endl;
     }
@@ -344,7 +347,9 @@ std::pair<double, double> TrojanMap::GetPlotLocation(double lat, double lon) {
  * @param  {std::string} id : location id
  * @return {double}         : latitude
  */
-double TrojanMap::GetLat(std::string id) { return 0; }
+double TrojanMap::GetLat(std::string id) { 
+  return  data[id].lat;
+}
 
 /**
  * GetLon: Get the longitude of a Node given its id. 
@@ -352,7 +357,9 @@ double TrojanMap::GetLat(std::string id) { return 0; }
  * @param  {std::string} id : location id
  * @return {double}         : longitude
  */
-double TrojanMap::GetLon(std::string id) { return 0; }
+double TrojanMap::GetLon(std::string id) { 
+  return data[id].lon;
+}
 
 /**
  * GetName: Get the name of a Node given its id.
@@ -360,7 +367,9 @@ double TrojanMap::GetLon(std::string id) { return 0; }
  * @param  {std::string} id : location id
  * @return {std::string}    : name
  */
-std::string TrojanMap::GetName(std::string id) { return ""; }
+std::string TrojanMap::GetName(std::string id) { 
+  return data[id].name;
+}
 
 /**
  * GetNeighborIDs: Get the neighbor ids of a Node.
@@ -370,17 +379,23 @@ std::string TrojanMap::GetName(std::string id) { return ""; }
  */
 std::vector<std::string> TrojanMap::GetNeighborIDs(std::string id) {
     std::vector<std::string> result;
+    //result.push_back(data[id].neighbor);
+    result = data[id].neighbors;
     return result;
 }
 
 
 /**
- * CalculateDistance: Get the distance between 2 nodes. 
+ * TODO: CalculateDistance: Get the distance between 2 nodes. 
  * 
  * @param  {Node} a  : node a
  * @param  {Node} b  : node b
  * @return {double}  : distance in mile
  */
+
+// helper function to calculate distance 
+
+
 double TrojanMap::CalculateDistance(const Node &a, const Node &b) {
   // TODO: Use Haversine Formula:
   // dlon = lon2 - lon1;
@@ -388,25 +403,40 @@ double TrojanMap::CalculateDistance(const Node &a, const Node &b) {
   // a = (sin(dlat / 2)) ^ 2 + cos(lat1) * cos(lat2) * (sin(dlon / 2)) ^ 2;
   // c = 2 * arcsin(min(1, sqrt(a)));
   // distances = 3961 * c;
+  double lat1 = a.lat, lon1 = a.lon, lat2 = b.lat, lon2 = b.lon;
+  double dLat = (lat2 - lat1) * M_PI / 180.0; 
+  double dLon = (lon2 - lon1) * M_PI / 180.0; 
 
+  lat1 = (lat1) * M_PI / 180.0; 
+  lat2 = (lat2) * M_PI / 180.0; 
+
+  double aa = pow(sin(dLat / 2), 2) + pow(sin(dLon / 2), 2) * cos(lat1) * cos(lat2); 
+  double rad = 3961; 
+  double c = 2 * asin(sqrt(aa)); 
+  return rad * c; 
   // where 3961 is the approximate radius of the earth at the latitude of
-  // Washington, D.C., in miles
-  return 0;
+
 }
 
 /**
- * CalculatePathLength: Calculates the total path length for the locations inside the vector.
+ * TODO: CalculatePathLength: Calculates the total path length for the locations inside the vector.
  * 
  * @param  {std::vector<std::string>} path : path
  * @return {double}                        : path length
  */
 double TrojanMap::CalculatePathLength(const std::vector<std::string> &path) {
   double sum = 0;
+  while(path.size()<2){
+    return sum;
+  }
+  for (int i = 0; i < int(path.size())-1; i++) {
+    sum += CalculateDistance(data[path[i]], data[path[i+1]]);
+  }
   return sum;
 }
 
 /**
- * Autocomplete: Given a parital name return all the possible locations with
+ * TODO: Autocomplete: Given a parital name return all the possible locations with
  * partial name as the prefix.
  *
  * @param  {std::string} name          : partial name
@@ -414,31 +444,37 @@ double TrojanMap::CalculatePathLength(const std::vector<std::string> &path) {
  */
 std::vector<std::string> TrojanMap::Autocomplete(std::string name) {
   std::vector<std::string> results;
+
+
   return results;
 }
 
 /**
- * GetPosition: Given a location name, return the position.
+ * TODO: GetPosition: Given a location name, return the position.
  *
  * @param  {std::string} name          : location name
  * @return {std::pair<double,double>}  : (lat, lon)
  */
 std::pair<double, double> TrojanMap::GetPosition(std::string name) {
   std::pair<double, double> results(-1, -1);
+
+
   return results;
 }
 
 /**
- * CalculateShortestPath: Given 2 locations, return the shortest path which is a
+ * TODO: CalculateShortestPath: Given 2 locations, return the shortest path which is a
  * list of id.
  *
  * @param  {std::string} location1_name     : start
  * @param  {std::string} location2_name     : goal
  * @return {std::vector<std::string>}       : path
  */
-std::vector<std::string> TrojanMap::CalculateShortestPath(
-    std::string location1_name, std::string location2_name) {
-  std::vector<std::string> x;
+std::vector<std::string> TrojanMap::CalculateShortestPath(std::string location1_name, std::string location2_name) {
+  std::vector<std::string> x; // the path of visited nodes 
+  //double INF = 99999999999999L;
+
+
   return x;
 }
 
@@ -449,8 +485,8 @@ std::vector<std::string> TrojanMap::CalculateShortestPath(
  * @param  {std::vector<std::string>} input : a list of locations needs to visit
  * @return {std::pair<double, std::vector<std::vector<std::string>>} : a pair of total distance and the all the progress to get final path
  */
-std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan(
-                                    std::vector<std::string> &location_ids) {
+std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravellingTrojan(std::vector<std::string> &location_ids) {
   std::pair<double, std::vector<std::vector<std::string>>> results;
+
   return results;
 } 
