@@ -470,8 +470,19 @@ std::vector<std::string> TrojanMap::Autocomplete(std::string name) {
  * @return {std::pair<double,double>}  : (lat, lon)
  */
 std::pair<double, double> TrojanMap::GetPosition(std::string name) {
+  // Step2: find the position 
   std::pair<double, double> results(-1, -1);
-  
+  for (auto id: data){
+    // for each name in data
+    if (name == id.second.name){ // check if the input name is in the database
+      results.first = GetLat(id.first);
+      // insert Latitude as first param
+      results.second = GetLon(id.first);
+      // insert Lontitude as second param 
+      // std::cout << "id.second: " << id.second << std::endl;
+      break;
+    }
+  }
 
   return results;
   // Latitude: 34.0257 Longitude: -118.284
@@ -487,7 +498,11 @@ std::pair<double, double> TrojanMap::GetPosition(std::string name) {
  */
 std::vector<std::string> TrojanMap::CalculateShortestPath(std::string location1_name, std::string location2_name) {
   std::vector<std::string> x; // the path of visited nodes 
-  //double INF = 99999999999999L;
+  double INF = 99999999999999L;
+  // Dijkstra's Implementation (Distance Vector SPT)
+  // https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/?ref=lbp
+  std::vector<std::string> x; // the path of visited nodes 
+  
 
 
   return x;
