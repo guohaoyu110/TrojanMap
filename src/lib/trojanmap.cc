@@ -21,7 +21,7 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
 
-// #define pi 3.1415926
+#define pi 3.1415926
 // #define EARTH_RADIUS 6378.137 //KM
 //-----------------------------------------------------
 // TODO (Students): You do not and should not change the following functions:
