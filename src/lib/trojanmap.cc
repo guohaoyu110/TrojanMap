@@ -22,7 +22,7 @@
 #include "opencv2/videoio.hpp"
 
 #define pi 3.1415926
-// #define EARTH_RADIUS 6378.137 //KM
+#define EARTH_RADIUS 6378.137 //KM
 //-----------------------------------------------------
 // TODO (Students): You do not and should not change the following functions:
 //-----------------------------------------------------
@@ -349,6 +349,7 @@ std::pair<double, double> TrojanMap::GetPlotLocation(double lat, double lon) {
  */
 double TrojanMap::GetLat(std::string id) { 
   return  data[id].lat;
+
 }
 
 /**
@@ -443,8 +444,21 @@ double TrojanMap::CalculatePathLength(const std::vector<std::string> &path) {
  * @return {std::vector<std::string>}  : a vector of full names
  */
 std::vector<std::string> TrojanMap::Autocomplete(std::string name) {
+  // 自动补全，输入tar，输出Target
   std::vector<std::string> results;
-
+  std::string ids; // make a copy of ids 
+  std::transform(name.begin(),name.end(), name.begin(), ::tolower );
+  for (auto id : data) { //for each name in data
+    ids = id.second.name;
+    std::transform(ids.begin(), ids.end(), ids.begin(), ::tolower);
+  //covert input data into the lowercase
+    if (name == ids.substr(0, name.size())) {
+    //check if the input name match with the data name.
+    //refre to: https://www.geeksforgeeks.org/substring-in-cpp/
+      results.push_back(id.second.name);
+      //add original name to the results
+    }
+  }
 
   return results;
 }
@@ -457,9 +471,10 @@ std::vector<std::string> TrojanMap::Autocomplete(std::string name) {
  */
 std::pair<double, double> TrojanMap::GetPosition(std::string name) {
   std::pair<double, double> results(-1, -1);
-
+  
 
   return results;
+  // Latitude: 34.0257 Longitude: -118.284
 }
 
 /**
